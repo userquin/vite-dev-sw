@@ -3,18 +3,20 @@ const version = 'v0.0.0'
 
 const base = import.meta.env.BASE_URL || '/'
 
-if (import.meta.hot)
-    import.meta.hot.decline()
-
+// add it again when HMR fixed on web workers:
+// https://github.com/vitejs/vite/pull/6483
+// if (import.meta.hot)
+//     import.meta.hot.decline()
+//
 // @ts-ignore
 declare let self: ServiceWorkerGlobalScope
 
-// TODO: we should use the base
+// TODO: we should use the base url
 const exclusions: RegExp[] = [
     // to allow env changes?
-    /vite\/dist\/client\/env.(m)?js$/,
+    // /vite\/dist\/client\/env.(m)?js$/,
     // can we remove it?
-    /^\/@vite\/client$/,
+    // /^\/@vite\/client$/,
     /^\/__inspect/,
     /^\/vite-sw-dev-server.js$/,
     /^\/vite-sw-dev-server.ts$/

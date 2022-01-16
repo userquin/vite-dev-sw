@@ -6,10 +6,11 @@ const base = import.meta.env.BASE_URL || '/'
 // @ts-ignore
 declare let self: ServiceWorkerGlobalScope
 
-const exclusions: RegExp[] = [/^\/__inspect/, /^\/vite-sw-dev-server.js$/, /^\/vite-sw-dev-server.ts$/]
+// TODO: we should use the base
+const exclusions: RegExp[] = [/^\/@vite\/client$/, /^\/__inspect/, /^\/vite-sw-dev-server.js$/, /^\/vite-sw-dev-server.ts$/]
 
 const shouldBeExcluded = (req: Request) => {
-    const path = req.url
+    const path = new URL(req.url, location.origin).pathname
     return exclusions.some(re => path.match(re) !== null)
 };
 

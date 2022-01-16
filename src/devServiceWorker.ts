@@ -66,9 +66,7 @@ const getCached = async (req: Request): Promise<Response> => {
 
     const resp = await fetch(req)
 
-    // we don't need to await here, we can block
-    // noinspection ES6MissingAwait
-    cache.put(req, resp)
+    await cache.put(req, resp)
 
     return resp
 };

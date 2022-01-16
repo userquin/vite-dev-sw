@@ -5,10 +5,24 @@
     <link rel="icon" href="/favicon.ico" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Vite App</title>
+    <script type="module">
+      if (import.meta.env.DEV) {
+        try {
+          await navigator.serviceWorker.register('/vite-sw-dev-server.js', { type: 'module' })
+          console.log('dev service worker registered')
+          await new Promise(resolve => {
+            navigator.serviceWorker.addEventListener(
+              'controllerchange', () => resolve())
+          })
+        }
+        catch (e) {
+          console.error('failed to register dev service worker', e)
+        }
+      }
+    </script>
   </head>
   <body>
     <div id="app"></div>
-    <script type="module" src="/src/register-sw.ts"></script>
     <script type="module" src="/src/main.ts"></script>
   </body>
 </html>

@@ -10,7 +10,7 @@ declare let self: ServiceWorkerGlobalScope
 const exclusions: RegExp[] = [/^\/@vite\/client$/, /^\/__inspect/, /^\/vite-sw-dev-server.js$/, /^\/vite-sw-dev-server.ts$/]
 
 const shouldBeExcluded = (req: Request) => {
-    const path = new URL(req.url, location.origin).pathname
+    const path = new URL(req.url).pathname
     return exclusions.some(re => path.match(re) !== null)
 };
 

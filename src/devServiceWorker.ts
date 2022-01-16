@@ -8,7 +8,7 @@ const base = import.meta.env.BASE_URL || '/'
 // if (import.meta.hot)
 //     import.meta.hot.decline()
 //
-// @ts-ignore
+
 declare let self: ServiceWorkerGlobalScope
 
 // TODO: we should use the base url

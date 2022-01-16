@@ -1,2 +1,3 @@
 # vite-dev-sw
-POC: Persistent Cache #1309
+
+POC: [Vite Persistent Cache #1309](https://github.com/vitejs/vite/issues/1309)

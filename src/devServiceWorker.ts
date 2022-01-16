@@ -3,11 +3,22 @@ const version = 'v0.0.0'
 
 const base = import.meta.env.BASE_URL || '/'
 
+if (import.meta.hot)
+    import.meta.hot.decline()
+
 // @ts-ignore
 declare let self: ServiceWorkerGlobalScope
 
 // TODO: we should use the base
-const exclusions: RegExp[] = [/^\/@vite\/client$/, /^\/__inspect/, /^\/vite-sw-dev-server.js$/, /^\/vite-sw-dev-server.ts$/]
+const exclusions: RegExp[] = [
+    // to allow env changes?
+    /vite\/dist\/client\/env.(m)?js$/,
+    // can we remove it?
+    /^\/@vite\/client$/,
+    /^\/__inspect/,
+    /^\/vite-sw-dev-server.js$/,
+    /^\/vite-sw-dev-server.ts$/
+]
 
 const shouldBeExcluded = (req: Request) => {
     const path = new URL(req.url).pathname

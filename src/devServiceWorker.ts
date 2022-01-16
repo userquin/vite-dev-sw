@@ -6,7 +6,7 @@ const base = import.meta.env.BASE_URL || '/'
 // @ts-ignore
 declare let self: ServiceWorkerGlobalScope
 
-const exclusions: RegExp[] = [/^\/__inspect$/, /\/vite-sw-dev-server.js$/, /\/vite-sw-dev-server.ts$/]
+const exclusions: RegExp[] = [/^\/__inspect/, /^\/vite-sw-dev-server.js$/, /^\/vite-sw-dev-server.ts$/]
 
 const shouldBeExcluded = (req: Request) => {
     const path = req.url
@@ -33,7 +33,7 @@ self.addEventListener('activate', event => {
                     .map(key => {
                         return caches.delete(key)
                     })
-            );
+            )
         })
     );
 });
@@ -43,13 +43,13 @@ self.addEventListener('fetch', event => {
     const request = fe.request
 
     // @ts-ignore
-    console.log('HANDLING REQUEST', request.url);
+    console.log('HANDLING REQUEST', request.url)
 
     if (request.method === 'GET' && !shouldBeExcluded(request)) {
         // @ts-ignore
         console.log('fetching with cache:', request.url)
         fe.respondWith(getCached(request))
-        return;
+        return
     }
 
     return fe.respondWith(fetch(request))
@@ -74,6 +74,6 @@ const getCached = async (req: Request): Promise<Response> => {
 addEventListener('message', event => {
     if (event.data && event.data === 'SKIP_WAITING') {
         // noinspection JSIgnoredPromiseFromCall
-        self.skipWaiting();
+        self.skipWaiting()
     }
 });

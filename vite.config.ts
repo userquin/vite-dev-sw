@@ -8,6 +8,8 @@ export default defineConfig({
   plugins: [
       {
         name: 'vite-dev-server-sw',
+        enforce: 'pre',
+        apply: 'serve',
         resolveId(id) {
           return id === '/vite-sw-dev-server.js' ? id.replace('.js', '.ts') : undefined
         },

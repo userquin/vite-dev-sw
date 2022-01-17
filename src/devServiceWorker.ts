@@ -1,3 +1,6 @@
+import {NetworkOnly, StaleWhileRevalidate} from "workbox-strategies";
+import {setDefaultHandler} from "workbox-routing";
+
 const cacheName = 'vite-sw-cache'
 const version = 'v0.0.0'
 
@@ -31,6 +34,7 @@ self.addEventListener('install', event => {
     // @ts-ignore
     console.log('Installing....')
     ;(event as ExtendableEvent).waitUntil(caches.open(version + cacheName))
+    self.skipWaiting()
 });
 
 self.addEventListener('activate', event => {
@@ -52,42 +56,31 @@ self.addEventListener('activate', event => {
     );
 });
 
-self.addEventListener('fetch', event => {
-    const fe = event as FetchEvent
-    const request = fe.request
+const swrStrategy = new StaleWhileRevalidate({
+    cacheName: version + cacheName,
+});
+
+const networkOnlyStrategy = new NetworkOnly()
+
+const loadUrl = async (event: FetchEvent) => {
+    const request = event.request;
+    const url = request.url
 
     // @ts-ignore
-    console.log('HANDLING REQUEST', request.url)
+    console.log('HANDLING REQUEST', url)
 
     if (request.method === 'GET' && !shouldBeExcluded(request)) {
-        // @ts-ignore
-        console.log('fetching with cache:', request.url)
-        fe.respondWith(getCached(request))
-        return
+        return await swrStrategy.handle({
+            event,
+            request: url,
+        });
     }
 
-    return fe.respondWith(fetch(request))
-});
-
-const getCached = async (req: Request): Promise<Response> => {
-    const cache = await caches.open(version + cacheName)
-
-    const match = await cache.match(req)
-
-    if (match) {
-        return match
-    }
-
-    const resp = await fetch(req)
-
-    await cache.put(req, resp)
-
-    return resp
+    return await networkOnlyStrategy.handle({
+        event,
+        request: url,
+    });
 };
 
-addEventListener('message', event => {
-    if (event.data && event.data === 'SKIP_WAITING') {
-        // noinspection JSIgnoredPromiseFromCall
-        self.skipWaiting()
-    }
-});
+setDefaultHandler(({event}) => loadUrl(event as FetchEvent));
+

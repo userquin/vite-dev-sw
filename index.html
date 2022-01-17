@@ -10,10 +10,6 @@
         try {
           await navigator.serviceWorker.register('/vite-sw-dev-server.js', { type: 'module' })
           console.log('dev service worker registered')
-          await new Promise(resolve => {
-            navigator.serviceWorker.addEventListener(
-              'controllerchange', () => resolve())
-          })
         }
         catch (e) {
           console.error('failed to register dev service worker', e)
